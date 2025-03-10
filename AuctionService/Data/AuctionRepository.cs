@@ -24,22 +24,23 @@ namespace AuctionService.Data
             await _context.SaveChangesAsync();
             return auction;
         }
-        public async Task<Auction> UpdateAuction(Auction auction)
+        public async Task<int> UpdateAuction(Auction auction)
         {
             _context.Auctions.Update(auction);
-            await _context.SaveChangesAsync();
-            return auction;
+            var result = await _context.SaveChangesAsync();
+            return result;
         }
-        public async Task<Auction> DeleteAuction(Guid id)
+        public async Task<int> DeleteAuction(Guid id)
         {
             var auction = await GetAuctionById(id);
+            var result = 0;
             if (auction != null)
             {
                 _context.Auctions.Remove(auction);
-                await _context.SaveChangesAsync();
-                return auction;
+               result =  await _context.SaveChangesAsync();
+                return result;
             }
-            return null;
+            return result;
         }
     }
     

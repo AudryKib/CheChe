@@ -10,8 +10,8 @@ namespace AuctionService.Data
 
         public Task<Auction> CreateAuction(Auction auction);
 
-        public Task<Auction> UpdateAuction(Auction auction);
+        public Task<int> UpdateAuction(Auction auction);
 
-        public Task<Auction> DeleteAuction(Guid id);
+        public Task<int> DeleteAuction(Guid id);
     }
 }
