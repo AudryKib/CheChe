@@ -36,10 +36,10 @@ namespace AuctionService.Controllers
         }
 
         [HttpGet("{Id}")]
-        public IActionResult GetAuctionById(Guid Id)
+        public async Task<ActionResult<AuctionDto>> GetAuctionById(Guid Id)
         {
-            var auction = _auctionRepository.GetAuctionById(Id);
-        
+            var auction = await _auctionRepository.GetAuctionById(Id);
+
             if (auction == null)
             {
                 return NotFound("Auction not found.");
@@ -79,20 +79,22 @@ namespace AuctionService.Controllers
             auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
 
           //  var updatedAuction = _mapper.Map(updateAuctionDto, auction);
-            await _auctionRepository.UpdateAuction(auction);
-            return NoContent();
+           var Result =  await _auctionRepository.UpdateAuction(auction);
+            if (!(Result>0)) return BadRequest("Failed to update auction.");
+            return Ok();
         }
 
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteAuction(Guid Id)
+        public async Task<ActionResult> DeleteAuction(Guid Id)
         {
             var auction = await _auctionRepository.GetAuctionById(Id);
             if (auction == null)
             {
                 return NotFound("Auction not found.");
             }
-            await _auctionRepository.DeleteAuction(Id);
-            return NoContent();
+            var result =  await _auctionRepository.DeleteAuction(Id);
+            if (!(result > 0)) return BadRequest("Failed to delete auction.");
+            return Ok("Auction deleted successfully.");
         }
     }
 }
