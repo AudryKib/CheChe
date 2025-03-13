@@ -24,15 +24,15 @@ namespace AuctionService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<AuctionDto>>> GetAllAuctions()
+        public async Task<ActionResult<List<AuctionDto>>> GetAllAuctions(string? date)
         { 
-            var auctions = await _auctionRepository.GetAllAuctions();
-            if (auctions == null || !auctions.Any())
+            var auctions = await _auctionRepository.GetAllAuctions(date);
+            if (auctions == null)
             {
                 return NotFound("No auctions found.");
             }
-            var auctionDtos = _mapper.Map<List<AuctionDto>>(auctions);
-            return Ok(auctionDtos);
+           
+            return Ok(auctions);
         }
 
         [HttpGet("{Id}")]
