@@ -2,6 +2,9 @@
 using AuctionService.Models;
 using AuctionService.Models.DTO;
 using AutoMapper;
+using Contracts;
+using MassTransit;
+using MassTransit.Transports;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,13 +17,15 @@ namespace AuctionService.Controllers
         private readonly ILogger<AuctionsController> _logger;
         private readonly IMapper _mapper;
         private readonly IAuctionRepository _auctionRepository;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-
-        public AuctionsController(ILogger<AuctionsController> logger, IMapper mapper, IAuctionRepository auctionRepository)
+        public AuctionsController(ILogger<AuctionsController> logger, IMapper mapper, IAuctionRepository auctionRepository, 
+            IPublishEndpoint publishEndpoint)
         {
             _logger = logger;
             _mapper = mapper;
             _auctionRepository = auctionRepository;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpGet]
@@ -58,8 +63,15 @@ namespace AuctionService.Controllers
             var auction = _mapper.Map<Auction>(auctionDto);
             auction.Seller = "Seller";
             var createdAuction = await _auctionRepository.CreateAuction(auction);
-            var createdAuctionDto = _mapper.Map<AuctionDto>(createdAuction);
-            return CreatedAtAction(nameof(GetAuctionById), new { Id = createdAuction.Id }, createdAuctionDto);
+            var newAuction = _mapper.Map<AuctionDto>(createdAuction);
+
+            await  _publishEndpoint.Publish<AuctionCreated>(newAuction);
+
+            var result =  await _auctionRepository.SaveAsync();
+
+            if (!result) return BadRequest("Failed to create auction.");
+
+            return CreatedAtAction(nameof(GetAuctionById), new { Id = createdAuction.Id }, newAuction);
         }
 
         [HttpPut("{Id}")]
@@ -79,8 +91,11 @@ namespace AuctionService.Controllers
             auction.Item.Year = updateAuctionDto.Year ?? auction.Item.Year;
 
           //  var updatedAuction = _mapper.Map(updateAuctionDto, auction);
-           var Result =  await _auctionRepository.UpdateAuction(auction);
-            if (!(Result>0)) return BadRequest("Failed to update auction.");
+         //   _auctionRepository.UpdateAuction(auction);
+
+            await _publishEndpoint.Publish(_mapper.Map<AuctionUpdated>(auction));
+            var result = await _auctionRepository.SaveAsync();
+            if (!result) return BadRequest("Failed to update auction.");
             return Ok();
         }
 
@@ -92,8 +107,15 @@ namespace AuctionService.Controllers
             {
                 return NotFound("Auction not found.");
             }
-            var result =  await _auctionRepository.DeleteAuction(Id);
-            if (!(result > 0)) return BadRequest("Failed to delete auction.");
+            
+            _auctionRepository.DeleteAuction(auction);
+
+            await _publishEndpoint.Publish<AuctionDeleted>(new { Id = auction.Id.ToString() });
+
+            var result = await _auctionRepository.SaveAsync();
+
+            if (!result) return BadRequest("Failed to delete auction.");
+
             return Ok("Auction deleted successfully.");
         }
     }

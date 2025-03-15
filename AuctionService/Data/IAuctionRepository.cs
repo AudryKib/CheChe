@@ -11,8 +11,10 @@ namespace AuctionService.Data
 
         public Task<Auction> CreateAuction(Auction auction);
 
-        public Task<int> UpdateAuction(Auction auction);
+        public void UpdateAuction(Auction auction);
 
-        public Task<int> DeleteAuction(Guid id);
+        public void DeleteAuction(Auction auction);
+
+        public Task<bool> SaveAsync();
     }
 }
