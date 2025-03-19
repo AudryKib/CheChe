@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.35821.62
@@ -14,6 +15,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchService", "SearchService\SearchService.csproj", "{27A95636-48A8-4783-A6C3-29169BEE7139}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{2612D936-4698-42C6-8291-87A22230450E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{B1E326DE-ABC4-4731-B367-2AA5AE1F2E93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +40,10 @@ Global
 		{2612D936-4698-42C6-8291-87A22230450E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2612D936-4698-42C6-8291-87A22230450E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2612D936-4698-42C6-8291-87A22230450E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1E326DE-ABC4-4731-B367-2AA5AE1F2E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1E326DE-ABC4-4731-B367-2AA5AE1F2E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1E326DE-ABC4-4731-B367-2AA5AE1F2E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1E326DE-ABC4-4731-B367-2AA5AE1F2E93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
