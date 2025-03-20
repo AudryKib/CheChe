@@ -1,3 +1,4 @@
+using AuctionService.Consumers;
 using AuctionService.Data;
 using AuctionService.Data.DbInitializer;
 using MassTransit;
@@ -18,7 +19,11 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddMassTransit(x =>
 {
-x.AddEntityFrameworkOutbox<AuctionDBContext>( o =>
+    x.AddConsumersFromNamespaceContaining<AuctionFinishedConsumer>();
+
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
+
+    x.AddEntityFrameworkOutbox<AuctionDBContext>( o =>
 {
     o.QueryDelay = TimeSpan.FromSeconds(10);
     o.UsePostgres();
