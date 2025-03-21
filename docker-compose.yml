@@ -18,6 +18,24 @@ services:
     ports:
      - "15672:15672"
      - "5672:5672"
+  auction-service:
+    image: ghostmachine25/first5:latest
+    build:
+      context: .
+      dockerfile: AuctionService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=auctiondb;User Id=postgres;Password=Admin211;
+      - IdentityServiceUrl=http://identity-service
+    ports:
+      - "7001:80"
+    depends_on:
+      - postgres
+      - rabbitmq
+      
+      
 
 volumes:
     pgdata:
