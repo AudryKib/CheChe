@@ -1,5 +1,8 @@
+using AuctionService.Consumers;
 using AuctionService.Data;
 using AuctionService.Data.DbInitializer;
+using MassTransit;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -14,11 +17,46 @@ builder.Services.AddDbContext<AuctionDBContext>(options =>
 builder.Services.AddLogging();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddMassTransit(x =>
+{
+    x.AddConsumersFromNamespaceContaining<AuctionFinishedConsumer>();
+
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("auction", false));
+
+    x.AddEntityFrameworkOutbox<AuctionDBContext>( o =>
+{
+    o.QueryDelay = TimeSpan.FromSeconds(10);
+    o.UsePostgres();
+    o.UseBusOutbox();
+});
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["RabbitMq:Host"], "/", h =>
+        {
+            h.Username(builder.Configuration.GetValue("RabbitMQ:Username", "guest")!);
+            h.Password(builder.Configuration.GetValue("RabbitMQ:Password", "guest")!);
+        });
+
+        cfg.ConfigureEndpoints(context);
+    });
+});
+
+
 builder.Services.AddScoped<IAuctionRepository, AuctionRepository>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options => {
+
+        options.Authority = builder.Configuration["IdentityServiceUrl"];
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.TokenValidationParameters.NameClaimType = "username";
+    });
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
