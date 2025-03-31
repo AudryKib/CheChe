@@ -19,7 +19,7 @@ services:
      - "15672:15672"
      - "5672:5672"
   auction-service:
-    image: ghostmachine25/first5:latest
+    image: ghostmachine26/first5:latest
     build:
       context: .
       dockerfile: AuctionService/Dockerfile
@@ -34,6 +34,48 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+  
+  search-service:
+    image: ghostmachine26/search-service:latest
+    build:
+      context: .
+      dockerfile: SearchService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__MongoDbConnection=mongodb://mongo
+      - AuctionServiceUrl=http://auction-service
+    ports:
+      - "7002:80"
+    depends_on:
+      - mongo
+      - rabbitmq
+  
+  cheche-gateway:
+    image: ghostmachine26/cheche-gateway:latest
+    build:
+      context: .
+      dockerfile: CheChe.Gateway/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "6001:80"
+
+  identity-service:
+    image: ghostmachine26/identity-service:latest
+    build:
+      context: .
+      dockerfile: IdentityService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=Server=postgres;Port=5432;Database=identity;User Id=postgres;Password=Admin211;
+    ports:
+      - "5000:80"
+    depends_on:
+      - postgres
       
       
 
