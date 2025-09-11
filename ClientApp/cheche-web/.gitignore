@@ -46,7 +46,7 @@ next-env.d.ts
 report-task.txt
 
 # PostgreSQL data directory
-pg_data/
+/pgdata
 data/
 *.pid
 
