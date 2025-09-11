@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import NavBar from "./navbar/NavBar";
 
 
 
@@ -19,7 +20,10 @@ export default function RootLayout({
       <body
         className=''
       >
+        <NavBar/>
+        <main className="container mx-auto px-5 pt-10">
         {children}
+        </main>
       </body>
     </html>
   );

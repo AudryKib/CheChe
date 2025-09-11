@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# SonarQube files
+.sonar/
+.sonarqube/
+report-task.txt
+
+# PostgreSQL data directory
+pg_data/
+data/
+*.pid
+
+# PostgreSQL dumps
+*.sql
+*.dump
+
+# PostgreSQL logs
+*.log

@@ -1,8 +1,9 @@
+import Listing from "./Auctions/Listing";
 
 export default function Home() {
   return (
 <div>
-<h3 className='text-3xl font-semibold'> CheChe App!</h3>
+<Listing/>
 </div>
   )
 }
