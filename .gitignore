@@ -55,6 +55,17 @@ nunit-*.xml
 [Rr]eleasePS/
 dlldata.c
 
+# SonarQube files
+.sonar/
+.sonarqube/
+report-task.txt
+
+# PostgreSQL data directory
+/pgdata
+data/
+*.pid
+
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
