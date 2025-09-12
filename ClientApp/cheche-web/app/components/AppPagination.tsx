@@ -17,7 +17,7 @@ export default function AppPagination( {currentPage, pageCount, pageChanged}: Ap
     <Pagination
     currentPage={currentPage}
     onPageChange={ (e) => pageChanged(e)}
-    totalPages={pageCount}
+   totalPages={Math.max(1, pageCount || 1)}
     layout="pagination"
     showIcons
     previousLabel="Previous"

@@ -17,8 +17,8 @@ export default function Listings() {
         pageNumber: state.pageNumber,
         pageSize: state.pageSize,
         searchTerm: state.searchTerm,
-        // orderBy: state.orderBy,
-        // filterBy: state.filterBy,
+        orderBy: state.orderBy,
+        filterBy: state.filterBy,
         // seller: state.seller,
         // winner: state.winner
     })));
@@ -37,8 +37,6 @@ export default function Listings() {
     }
 
     useEffect(() => {
-
-        console.log("I'm running");
         getData(url).then(data => {
             setData(data);
             setLoading(false);
@@ -50,7 +48,7 @@ export default function Listings() {
     return (
 
             <>
-                <Filters />
+                <Filters/>
              
                         <div className="grid grid-cols-4 gap-6">
                         {(data?.auctions ?? []).map(auction => (

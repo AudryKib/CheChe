@@ -1,16 +1,17 @@
+'use client'
 import React from 'react'
-import { IoCarSport } from "react-icons/io5";
-//import Search from './Search';
+import Search from './Search';
+import Logo from './Logo';
 
 export default function NavBar() {
+
+
   return (
     <header className="sticky top-0 z-50 flex justify-between bg-white p-5 items-center text-gray-800 shadow-md">
-    <div className="flex items-center gap-2 text-3xl font-semibold text-red-500">
-        <IoCarSport size={34} />
-        <div>CheChe Auctions</div>
-    </div>
-    
-<div>login</div>
+      <Logo />
+     <Search />
+
+      <div>login</div>
     </header>
   )
 }
